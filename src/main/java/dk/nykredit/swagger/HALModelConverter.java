@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import dk.nykredit.jackson.dataformat.hal.annotation.EmbeddedResource;
 import dk.nykredit.jackson.dataformat.hal.annotation.Link;
 import io.swagger.converter.ModelConverter;
@@ -22,7 +21,8 @@ import io.swagger.models.properties.ObjectProperty;
 import io.swagger.models.properties.Property;
 
 /**
- *
+ * Converter to handle HAL annotated classes ensuring embedded resources and linke are put into
+ * an "_embedded" and "_links" object respectively.
  */
 public class HALModelConverter implements ModelConverter {
 
@@ -69,7 +69,7 @@ public class HALModelConverter implements ModelConverter {
             property = chain.next().resolveProperty(type, context, annotations, chain);
         }
 
-        if (property != null && annotations != null) {
+        if (property != null && !(property instanceof HALProperty) && annotations != null) {
             for (Annotation annotation : annotations) {
                 Optional<HALReservedProperty> rp = HALReservedProperty.valueOf(annotation.annotationType());
                 if (rp.isPresent()) {
@@ -77,10 +77,13 @@ public class HALModelConverter implements ModelConverter {
                 }
             }
         }
-
         return property;
     }
 
+    /**
+     * Enumeration of properties reserved for HAL along with the association to the
+     * annotation marking objects to go into these properties.
+     */
     public enum HALReservedProperty {
         LINKS("_links", Link.class), EMBEDDED("_embedded", EmbeddedResource.class);
 
@@ -101,7 +104,7 @@ public class HALModelConverter implements ModelConverter {
         public String getName() {
             return name;
         }
-        
+
         public String getValue(Annotation annotation) {
             try {
                 return (String) valueMethod.invoke(annotation);
@@ -120,6 +123,9 @@ public class HALModelConverter implements ModelConverter {
         }
     }
 
+    /**
+     * Property that is a HAL property, i.e., a link or an embedded resource.
+     */
     public static class HALProperty extends AbstractProperty {
 
         private final HALReservedProperty halType;
@@ -140,7 +146,6 @@ public class HALModelConverter implements ModelConverter {
             return property;
         }
 
-        @JsonIgnore
         public String getSpecificName() {
             return specificName;
         }
