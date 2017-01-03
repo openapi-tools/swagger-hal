@@ -7,6 +7,7 @@ import dk.nykredit.jackson.dataformat.hal.HALLink;
 import dk.nykredit.jackson.dataformat.hal.annotation.EmbeddedResource;
 import dk.nykredit.jackson.dataformat.hal.annotation.Link;
 import dk.nykredit.jackson.dataformat.hal.annotation.Resource;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * Represents a single as returned from REST service.
@@ -38,6 +39,7 @@ public class AccountRepresentation {
         return name;
     }
 
+    @ApiModelProperty("Embeds the latest transaction of account.")
     public Collection<TransactionRepresentation> getTransactions() {
         if (transactions == null) {
             return null;

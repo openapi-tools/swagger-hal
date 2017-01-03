@@ -21,8 +21,7 @@ import io.swagger.models.properties.ObjectProperty;
 import io.swagger.models.properties.Property;
 
 /**
- * Converter to handle HAL annotated classes ensuring embedded resources and linke are put into
- * an "_embedded" and "_links" object respectively.
+ * Converter to handle HAL annotated classes ensuring embedded resources and linke are put into an "_embedded" and "_links" object respectively.
  */
 public class HALModelConverter implements ModelConverter {
 
@@ -81,8 +80,7 @@ public class HALModelConverter implements ModelConverter {
     }
 
     /**
-     * Enumeration of properties reserved for HAL along with the association to the
-     * annotation marking objects to go into these properties.
+     * Enumeration of properties reserved for HAL along with the association to the annotation marking objects to go into these properties.
      */
     public enum HALReservedProperty {
         LINKS("_links", Link.class), EMBEDDED("_embedded", EmbeddedResource.class);
@@ -121,35 +119,6 @@ public class HALModelConverter implements ModelConverter {
             }
             return Optional.empty();
         }
-    }
-
-    /**
-     * Property that is a HAL property, i.e., a link or an embedded resource.
-     */
-    public static class HALProperty extends AbstractProperty {
-
-        private final HALReservedProperty halType;
-        private final Property property;
-        private final String specificName;
-
-        public HALProperty(HALReservedProperty halType, String value, Property property) {
-            this.halType = halType;
-            this.property = property;
-            this.specificName = value;
-        }
-
-        public HALReservedProperty getHALType() {
-            return halType;
-        }
-
-        public Property getProperty() {
-            return property;
-        }
-
-        public String getSpecificName() {
-            return specificName;
-        }
-
     }
 
 }
