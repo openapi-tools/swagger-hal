@@ -16,7 +16,6 @@ import dk.nykredit.jackson.dataformat.hal.annotation.Link;
 import io.swagger.converter.ModelConverter;
 import io.swagger.converter.ModelConverterContext;
 import io.swagger.models.Model;
-import io.swagger.models.properties.AbstractProperty;
 import io.swagger.models.properties.ObjectProperty;
 import io.swagger.models.properties.Property;
 
@@ -33,7 +32,7 @@ public class HALModelConverter implements ModelConverter {
             model = chain.next().resolve(type, context, chain);
         }
 
-        if (model != null) {
+        if (model != null && model.getProperties() != null) {
             Map<HALReservedProperty, ObjectProperty> properties = new HashMap<>();
             Set<String> originalProperties = new HashSet<>();
 
