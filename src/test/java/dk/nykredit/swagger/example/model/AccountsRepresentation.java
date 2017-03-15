@@ -20,6 +20,8 @@ public class AccountsRepresentation {
     @EmbeddedResource("accounts")
     private Collection<AccountRepresentation> accounts;
 
+    private EmptyRepresentation emptyRepresentation;
+
     public AccountsRepresentation() {
     }
 
@@ -29,5 +31,9 @@ public class AccountsRepresentation {
 
     public Collection<AccountRepresentation> getAccounts() {
         return Collections.unmodifiableCollection(accounts);
+    }
+
+    public EmptyRepresentation getEmptyRepresentation() {
+        return emptyRepresentation;
     }
 }
