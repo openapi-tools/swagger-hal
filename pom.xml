@@ -5,7 +5,7 @@
     
     <name>Swagger HAL module</name>
     <groupId>dk.nykredit.swagger</groupId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
     <artifactId>swagger-hal</artifactId>
     <packaging>jar</packaging>
 
@@ -32,7 +32,7 @@
         <connection>scm:git:https://github.com/Nykredit/swagger-hal.git</connection>
         <developerConnection>scm:git:https://github.com/Nykredit/swagger-hal.git</developerConnection>
         <url>https://github.com/Nykredit/swagger-hal/tree/master</url>
-      <tag>HEAD</tag>
+      <tag>v1.0.2</tag>
     </scm>
 
     <distributionManagement>
