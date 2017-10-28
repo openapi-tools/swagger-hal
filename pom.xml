@@ -54,6 +54,9 @@
         <junit.version>4.12</junit.version>
         <org.mockito.version>2.11.0</org.mockito.version>
         <org.slf4j.version>1.7.25</org.slf4j.version>
+        <io.openapitools.jackson.dataformat.jackson-dataformat-hal.version>1.0.4
+        </io.openapitools.jackson.dataformat.jackson-dataformat-hal.version>
+        <javax.xml.bin.jaxb-api.version>2.3.0</javax.xml.bin.jaxb-api.version>
     </properties>
 
     <dependencies>
@@ -65,12 +68,18 @@
         <dependency>
             <groupId>io.openapitools.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-hal</artifactId>
-            <version>1.0.4</version>
+            <version>${io.openapitools.jackson.dataformat.jackson-dataformat-hal.version}</version>
         </dependency>     
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${org.slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>${javax.xml.bin.jaxb-api.version}</version>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -155,7 +164,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
+                <version>3.0.0-M1</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
