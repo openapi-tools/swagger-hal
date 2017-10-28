@@ -4,13 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
     
     <name>Swagger HAL module</name>
-    <groupId>dk.nykredit.swagger</groupId>
-    <version>1.0.3-SNAPSHOT</version>
+    <groupId>io.openapitools.hal</groupId>
+    <version>1.0.4-SNAPSHOT</version>
     <artifactId>swagger-hal</artifactId>
     <packaging>jar</packaging>
 
-    <description>Swagger module to support generating documentation from endpoints utilizing the Jackson HAL module..</description>
-    <url>https://github.com/Nykredit/swagger-hal</url>
+    <description>Swagger Open API specification module supporting generation of documentation from endpoints utilizing the Jackson HAL module.</description>
+    <url>https://github.com/openapi-tools/swagger-hal</url>
 
     <licenses>
         <license>
@@ -21,17 +21,17 @@
 
     <developers>
         <developer>
-          <name>Thor Anker Kvisgård Lange</name>
-          <email>tal@nykredit.dk</email>
-          <organization>Nykredit</organization>
-          <organizationUrl>http://www.nykredit.dk</organizationUrl>
+            <name>Thor Anker Kvisgård Lange</name>
+            <email>thor.lange@gmail.com</email>
+            <organization>Open API Tools</organization>
+            <organizationUrl>https://github.com/openapi-tools</organizationUrl>
         </developer>
     </developers>
 
     <scm>
-        <connection>scm:git:https://github.com/Nykredit/swagger-hal.git</connection>
-        <developerConnection>scm:git:https://github.com/Nykredit/swagger-hal.git</developerConnection>
-        <url>https://github.com/Nykredit/swagger-hal/tree/master</url>
+        <connection>scm:git:https://github.com/openapi-tools/swagger-hal.git</connection>
+        <developerConnection>scm:git:https://github.com/openapi-tools/swagger-hal.git</developerConnection>
+        <url>https://github.com/openapi-tools/swagger-hal/tree/master</url>
       <tag>HEAD</tag>
     </scm>
 
@@ -50,10 +50,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         
-        <io.swagger.version>1.5.12</io.swagger.version>
+        <io.swagger.version>1.5.16</io.swagger.version>
         <junit.version>4.12</junit.version>
-        <org.mockito.version>2.2.28</org.mockito.version>
-        <org.slf4j.version>1.7.21</org.slf4j.version>
+        <org.mockito.version>2.11.0</org.mockito.version>
+        <org.slf4j.version>1.7.25</org.slf4j.version>
     </properties>
 
     <dependencies>
@@ -63,9 +63,9 @@
             <version>${io.swagger.version}</version>
         </dependency>   
         <dependency>
-            <groupId>dk.nykredit.jackson.dataformat</groupId>
+            <groupId>io.openapitools.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-hal</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.4</version>
         </dependency>     
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -91,7 +91,6 @@
             <version>${org.mockito.version}</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -99,7 +98,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>3.7.0</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -111,12 +110,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.19.1</version>
+                <version>2.20.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.19.1</version>
+                <version>2.20.1</version>
                 <executions>
                     <execution>
                         <goals>

@@ -1,4 +1,4 @@
-package dk.nykredit.swagger;
+package io.openapitools.hal;
 
 import java.util.Map;
 
@@ -7,7 +7,10 @@ import io.swagger.models.Xml;
 import io.swagger.models.properties.Property;
 
 /**
- * Property that is a HAL property, i.e., a link or an embedded resource. Decorating the original property.
+ * A property that is a HAL property.
+ *
+ * A HAL property is, i.e., a link or an embedded resource.
+ * Decorating the original property.
  */
 public class HALProperty implements Property {
 

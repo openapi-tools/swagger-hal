@@ -1,4 +1,4 @@
-package dk.nykredit.swagger.example;
+package io.openapitools.hal.example;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
@@ -14,9 +14,9 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import dk.nykredit.swagger.example.model.AccountRepresentation;
-import dk.nykredit.swagger.example.model.AccountUpdateRepresentation;
-import dk.nykredit.swagger.example.model.AccountsRepresentation;
+import io.openapitools.hal.example.model.AccountRepresentation;
+import io.openapitools.hal.example.model.AccountUpdateRepresentation;
+import io.openapitools.hal.example.model.AccountsRepresentation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
