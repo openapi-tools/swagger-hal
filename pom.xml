@@ -5,7 +5,7 @@
     
     <name>Swagger HAL module</name>
     <groupId>io.openapitools.hal</groupId>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.4</version>
     <artifactId>swagger-hal</artifactId>
     <packaging>jar</packaging>
 
@@ -32,7 +32,7 @@
         <connection>scm:git:https://github.com/openapi-tools/swagger-hal.git</connection>
         <developerConnection>scm:git:https://github.com/openapi-tools/swagger-hal.git</developerConnection>
         <url>https://github.com/openapi-tools/swagger-hal/tree/master</url>
-      <tag>HEAD</tag>
+      <tag>v1.0.4</tag>
     </scm>
 
     <distributionManagement>
