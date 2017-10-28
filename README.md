@@ -62,6 +62,8 @@ Module is considered production ready.
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.openapitools.hal/swagger-hal/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.openapitools.hal/swagger-hal/)
 [![Javadoc](https://javadoc-emblem.rhcloud.com/doc/io.openapitools.hal/swagger-hal/badge.svg)](https://www.javadoc.io/doc/io.openapitools.hal/swagger-hal)
+[![Build status](https://travis-ci.org/openapi-tools/swagger-hal.svg?branch=master)](https://travis-ci.org/openapi-tools/swagger-hal)
+
 
 # Usage
 
