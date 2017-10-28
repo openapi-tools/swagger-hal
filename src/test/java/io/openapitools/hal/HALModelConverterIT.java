@@ -1,9 +1,9 @@
-package dk.nykredit.swagger;
+package io.openapitools.hal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import dk.nykredit.swagger.example.AccountServiceExposure;
+import io.openapitools.hal.example.AccountServiceExposure;
 import io.swagger.jaxrs.Reader;
 import io.swagger.jaxrs.config.ReflectiveJaxrsScanner;
 import io.swagger.models.Model;

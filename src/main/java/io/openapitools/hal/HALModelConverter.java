@@ -1,4 +1,4 @@
-package dk.nykredit.swagger;
+package io.openapitools.hal;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import dk.nykredit.jackson.dataformat.hal.annotation.EmbeddedResource;
-import dk.nykredit.jackson.dataformat.hal.annotation.Link;
+import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
+import io.openapitools.jackson.dataformat.hal.annotation.Link;
 import io.swagger.converter.ModelConverter;
 import io.swagger.converter.ModelConverterContext;
 import io.swagger.models.Model;
@@ -20,7 +20,9 @@ import io.swagger.models.properties.ObjectProperty;
 import io.swagger.models.properties.Property;
 
 /**
- * Converter to handle HAL annotated classes ensuring embedded resources and linke are put into an "_embedded" and "_links" object respectively.
+ * Converter to handle HAL annotated classes.
+ *
+ * It ensures embedded resources and links are arranged into an "_embedded" and "_links" object respectively.
  */
 public class HALModelConverter implements ModelConverter {
 
