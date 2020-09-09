@@ -50,12 +50,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         
-        <io.swagger.version>1.5.22</io.swagger.version>
+        <io.swagger.version>1.6.2</io.swagger.version>
         <junit.version>4.12</junit.version>
         <org.mockito.version>2.11.0</org.mockito.version>
         <org.slf4j.version>1.7.25</org.slf4j.version>
-        <io.openapitools.jackson.dataformat.jackson-dataformat-hal.version>1.0.4
-        </io.openapitools.jackson.dataformat.jackson-dataformat-hal.version>
+        <io.openapitools.jackson.dataformat.jackson-dataformat-hal.version>1.0.7</io.openapitools.jackson.dataformat.jackson-dataformat-hal.version>
         <javax.xml.bin.jaxb-api.version>2.3.0</javax.xml.bin.jaxb-api.version>
     </properties>
 
