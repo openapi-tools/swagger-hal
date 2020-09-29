@@ -88,12 +88,16 @@ public class HALModelConverter extends ModelResolver {
 		Schema propertySchema = propertyNameAndSchema.getValue();
 
 		Field field = getField(schemaImplementationClass, propertyName);
-		Link[] linksFromField = field.getAnnotationsByType(Link.class);
-		EmbeddedResource[] embeddedFromField = field.getAnnotationsByType(EmbeddedResource.class);
+		Link[] linksFromField = field == null ?
+			new Link[0] : field.getAnnotationsByType(Link.class);
+		EmbeddedResource[] embeddedFromField = field == null ?
+			new EmbeddedResource[0] : field.getAnnotationsByType(EmbeddedResource.class);
 
 		Method method = getReadMethod(schemaImplementationClass, propertyName);
-		Link[] linksFromMethod = method.getAnnotationsByType(Link.class);
-		EmbeddedResource[] embeddedFromMethod = method.getAnnotationsByType(EmbeddedResource.class);
+		Link[] linksFromMethod = method == null ?
+			new Link[0] : method.getAnnotationsByType(Link.class);
+		EmbeddedResource[] embeddedFromMethod = method == null ?
+			new EmbeddedResource[0] : method.getAnnotationsByType(EmbeddedResource.class);
 
 		if (linksFromField.length > 0 || linksFromMethod.length > 0) {
 		    String value = "";
