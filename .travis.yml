@@ -4,7 +4,7 @@ install: mvn install -DskipTests=true -Dgpg.skip=true -Dmaven.javadoc.skip=true 
 script: mvn clean verify -Dgpg.skip=true -B
 
 jdk:
-  - oraclejdk9
+  - oraclejdk11
 
 cache:
   directories:
