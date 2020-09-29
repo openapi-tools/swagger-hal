@@ -33,6 +33,7 @@ import io.swagger.v3.oas.models.media.Schema;
  * It ensures embedded resources and links are arranged into an "_embedded" and "_links" object respectively.
  */
 public class HALModelConverter extends ModelResolver {
+    private static final String HAL_CURIE_PREFIX_SEPARATOR = ":";
     public static final String HAL_RESERVED_PROPERTY_LINKS = "_links";
     public static final String HAL_RESERVED_PROPERTY_EMBEDDED = "_embedded";
     public static final String OPENAPI_REF_PATH_DELIMITER = "/";
@@ -86,24 +87,64 @@ public class HALModelConverter extends ModelResolver {
 		String propertyName = propertyNameAndSchema.getKey();
 		Schema propertySchema = propertyNameAndSchema.getValue();
 
-		boolean isLink = false;
-		boolean isEmbedded = false;
-
 		Field field = getField(schemaImplementationClass, propertyName);
-		isLink = field.getAnnotationsByType(Link.class).length > 0;
-		isEmbedded = field.getAnnotationsByType(EmbeddedResource.class).length > 0;
+		Link[] linksFromField = field.getAnnotationsByType(Link.class);
+		EmbeddedResource[] embeddedFromField = field.getAnnotationsByType(EmbeddedResource.class);
 
 		Method method = getReadMethod(schemaImplementationClass, propertyName);
-		isLink = method.getAnnotationsByType(Link.class).length > 0 || isLink;
-		isEmbedded = method.getAnnotationsByType(EmbeddedResource.class).length > 0 || isEmbedded;
+		Link[] linksFromMethod = method.getAnnotationsByType(Link.class);
+		EmbeddedResource[] embeddedFromMethod = method.getAnnotationsByType(EmbeddedResource.class);
 
-		if (isLink) {
-		    linksSchema.addProperties(propertyName, propertySchema);
+		if (linksFromField.length > 0 || linksFromMethod.length > 0) {
+		    String value = "";
+		    String curie = "";
+		    if (linksFromField.length > 0) {
+			value = linksFromField[0].value();
+			curie = linksFromField[0].curie();
+			if (value.isEmpty() && linksFromMethod.length > 0) {
+			    value = linksFromMethod[0].value();
+			}
+			if (curie.isEmpty() && linksFromMethod.length > 0) {
+			    curie = linksFromMethod[0].curie();
+			}
+		    }
+		    if(value.isEmpty()) {
+			if(curie.isEmpty()) {
+			    linksSchema.addProperties(propertyName, propertySchema);
+			}
+			else {
+			    linksSchema.addProperties(curie + HAL_CURIE_PREFIX_SEPARATOR + propertyName, propertySchema);
+			}
+		    }
+		    else {
+			if (curie.isEmpty()) {
+			    linksSchema.addProperties(value, propertySchema);
+			}
+			else{
+			    linksSchema.addProperties(curie + HAL_CURIE_PREFIX_SEPARATOR + value, propertySchema);
+			}
+		    }
 		}
-		if (isEmbedded) {
-		    embeddedSchema.addProperties(propertyName, propertySchema);
+		if (embeddedFromField.length > 0 || embeddedFromMethod.length > 0) {
+		    String value = "";
+		    if (embeddedFromField.length > 0) {
+			value = embeddedFromField[0].value();
+			if (value.isEmpty() && embeddedFromMethod.length > 0) {
+			    value = embeddedFromMethod[0].value();
+			}
+		    }
+		    if(value.isEmpty()) {
+			embeddedSchema.addProperties(propertyName, propertySchema);
+		    }
+		    else {
+			embeddedSchema.addProperties(value, propertySchema);
+		    }
 		}
-		if (!isLink && !isEmbedded) {
+		if (
+			linksFromField.length == 0 &&
+			linksFromMethod.length == 0 &&
+			embeddedFromField.length == 0 &&
+			embeddedFromMethod.length ==0) {
 		    newProperties.put(propertyName, propertySchema);
 		}
 	    }

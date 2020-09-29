@@ -74,4 +74,23 @@ public class HALModelConverterIT {
         Assertions.assertEquals("array", accounts.getType());
     }
 
+    @Test
+    public void testGenerationUsesNameFromAnnotation() {
+	OpenAPI openApi = openApiContext.read();
+	String resourceName = "AccountRepresentation";
+
+	Assertions.assertTrue(openApi.getComponents().getSchemas().containsKey(resourceName));
+
+        Schema<?> accountRepresentation = openApi.getComponents().getSchemas().get(resourceName);
+        Assertions.assertTrue(accountRepresentation.getProperties().containsKey(HALModelConverter.HAL_RESERVED_PROPERTY_LINKS));
+        Assertions.assertTrue(accountRepresentation.getProperties().containsKey(HALModelConverter.HAL_RESERVED_PROPERTY_EMBEDDED));
+        Assertions.assertEquals(5, accountRepresentation.getProperties().size());
+
+        Assertions.assertTrue(accountRepresentation
+        	.getProperties()
+        	.get(HALModelConverter.HAL_RESERVED_PROPERTY_LINKS)
+        	.getProperties()
+        	.containsKey("account:transactions"));
+    }
+
 }
