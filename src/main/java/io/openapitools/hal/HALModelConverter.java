@@ -39,7 +39,7 @@ public class HALModelConverter extends ModelResolver {
     public static final String OPENAPI_REF_PATH_DELIMITER = "/";
 
     public HALModelConverter() {
-	super(Json.mapper());
+	this(Json.mapper());
     }
 
     public HALModelConverter(ObjectMapper mapper) {
@@ -82,84 +82,74 @@ public class HALModelConverter extends ModelResolver {
 	    return originalSchema;
 	}
 
-	if (isHALJsonResource(schemaImplementationClass)) {
-	    for (Entry<String, Schema> propertyNameAndSchema : properties.entrySet()) {
-		String propertyName = propertyNameAndSchema.getKey();
-		Schema propertySchema = propertyNameAndSchema.getValue();
-
-		Field field = getField(schemaImplementationClass, propertyName);
-		Link[] linksFromField = field == null ?
-			new Link[0] : field.getAnnotationsByType(Link.class);
-		EmbeddedResource[] embeddedFromField = field == null ?
-			new EmbeddedResource[0] : field.getAnnotationsByType(EmbeddedResource.class);
-
-		Method method = getReadMethod(schemaImplementationClass, propertyName);
-		Link[] linksFromMethod = method == null ?
-			new Link[0] : method.getAnnotationsByType(Link.class);
-		EmbeddedResource[] embeddedFromMethod = method == null ?
-			new EmbeddedResource[0] : method.getAnnotationsByType(EmbeddedResource.class);
-
-		if (linksFromField.length > 0 || linksFromMethod.length > 0) {
-		    String value = "";
-		    String curie = "";
-		    if (linksFromField.length > 0) {
-			value = linksFromField[0].value();
-			curie = linksFromField[0].curie();
-			if (value.isEmpty() && linksFromMethod.length > 0) {
-			    value = linksFromMethod[0].value();
-			}
-			if (curie.isEmpty() && linksFromMethod.length > 0) {
-			    curie = linksFromMethod[0].curie();
-			}
-		    }
-		    if(value.isEmpty()) {
-			if(curie.isEmpty()) {
-			    linksSchema.addProperties(propertyName, propertySchema);
-			}
-			else {
-			    linksSchema.addProperties(curie + HAL_CURIE_PREFIX_SEPARATOR + propertyName, propertySchema);
-			}
-		    }
-		    else {
-			if (curie.isEmpty()) {
-			    linksSchema.addProperties(value, propertySchema);
-			}
-			else{
-			    linksSchema.addProperties(curie + HAL_CURIE_PREFIX_SEPARATOR + value, propertySchema);
-			}
-		    }
-		}
-		if (embeddedFromField.length > 0 || embeddedFromMethod.length > 0) {
-		    String value = "";
-		    if (embeddedFromField.length > 0) {
-			value = embeddedFromField[0].value();
-			if (value.isEmpty() && embeddedFromMethod.length > 0) {
-			    value = embeddedFromMethod[0].value();
-			}
-		    }
-		    if(value.isEmpty()) {
-			embeddedSchema.addProperties(propertyName, propertySchema);
-		    }
-		    else {
-			embeddedSchema.addProperties(value, propertySchema);
-		    }
-		}
-		if (
-			linksFromField.length == 0 &&
-			linksFromMethod.length == 0 &&
-			embeddedFromField.length == 0 &&
-			embeddedFromMethod.length ==0) {
-		    newProperties.put(propertyName, propertySchema);
-		}
-	    }
-	    if(linksSchema.getProperties() == null || linksSchema.getProperties().size() > 0) {
-		newProperties.put(HAL_RESERVED_PROPERTY_LINKS, linksSchema);
-	    }
-	    if(embeddedSchema.getProperties() == null || embeddedSchema.getProperties().size() > 0) {
-		newProperties.put(HAL_RESERVED_PROPERTY_EMBEDDED, embeddedSchema);
-	    }
-	    schema.setProperties(newProperties);
+	if (!isHALJsonResource(schemaImplementationClass)) {
+	    return originalSchema;
 	}
+	for (Entry<String, Schema> propertyNameAndSchema : properties.entrySet()) {
+	    String propertyName = propertyNameAndSchema.getKey();
+	    Schema propertySchema = propertyNameAndSchema.getValue();
+	    Field field = getField(schemaImplementationClass, propertyName);
+	    Link[] linksFromField = field == null ? new Link[0] : field.getAnnotationsByType(Link.class);
+	    EmbeddedResource[] embeddedFromField = field == null ? new EmbeddedResource[0]
+		    : field.getAnnotationsByType(EmbeddedResource.class);
+	    Method method = getReadMethod(schemaImplementationClass, propertyName);
+	    Link[] linksFromMethod = method == null ? new Link[0] : method.getAnnotationsByType(Link.class);
+	    EmbeddedResource[] embeddedFromMethod = method == null ? new EmbeddedResource[0]
+		    : method.getAnnotationsByType(EmbeddedResource.class);
+	    if (linksFromField.length > 0 || linksFromMethod.length > 0) {
+		String value = "";
+		String curie = "";
+		if (linksFromField.length > 0) {
+		    value = linksFromField[0].value();
+		    curie = linksFromField[0].curie();
+		    if (value.isEmpty() && linksFromMethod.length > 0) {
+			value = linksFromMethod[0].value();
+		    }
+		    if (curie.isEmpty() && linksFromMethod.length > 0) {
+			curie = linksFromMethod[0].curie();
+		    }
+		}
+		if (value.isEmpty()) {
+		    if (curie.isEmpty()) {
+			linksSchema.addProperties(propertyName, propertySchema);
+		    } else {
+			linksSchema.addProperties(curie + HAL_CURIE_PREFIX_SEPARATOR + propertyName, propertySchema);
+		    }
+		} else {
+		    if (curie.isEmpty()) {
+			linksSchema.addProperties(value, propertySchema);
+		    } else {
+			linksSchema.addProperties(curie + HAL_CURIE_PREFIX_SEPARATOR + value, propertySchema);
+		    }
+		}
+	    }
+	    if (embeddedFromField.length > 0 || embeddedFromMethod.length > 0) {
+		String value = "";
+		if (embeddedFromField.length > 0) {
+		    value = embeddedFromField[0].value();
+		    if (value.isEmpty() && embeddedFromMethod.length > 0) {
+			value = embeddedFromMethod[0].value();
+		    }
+		}
+		if (value.isEmpty()) {
+		    embeddedSchema.addProperties(propertyName, propertySchema);
+		} else {
+		    embeddedSchema.addProperties(value, propertySchema);
+		}
+	    }
+	    if (linksFromField.length == 0 && linksFromMethod.length == 0 && embeddedFromField.length == 0
+		    && embeddedFromMethod.length == 0) {
+		newProperties.put(propertyName, propertySchema);
+	    }
+	}
+	if (linksSchema.getProperties() == null || linksSchema.getProperties().size() > 0) {
+	    newProperties.put(HAL_RESERVED_PROPERTY_LINKS, linksSchema);
+	}
+	if (embeddedSchema.getProperties() == null || embeddedSchema.getProperties().size() > 0) {
+	    newProperties.put(HAL_RESERVED_PROPERTY_EMBEDDED, embeddedSchema);
+	}
+	schema.setProperties(newProperties);
+
 	if(!schemaReferenceName.isEmpty()) {
 	    context.defineModel(schemaReferenceName, schema);
 	    return originalSchema;
