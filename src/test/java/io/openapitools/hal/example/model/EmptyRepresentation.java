@@ -7,4 +7,5 @@ import io.openapitools.jackson.dataformat.hal.annotation.Resource;
  */
 @Resource
 class EmptyRepresentation {
+
 }

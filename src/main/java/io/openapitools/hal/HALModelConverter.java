@@ -1,125 +1,107 @@
 package io.openapitools.hal;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
+import com.fasterxml.jackson.databind.BeanDescription;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
+import io.openapitools.jackson.dataformat.hal.annotation.Link;
+import io.swagger.v3.core.converter.AnnotatedType;
+import io.swagger.v3.core.converter.ModelConverter;
+import io.swagger.v3.core.converter.ModelConverterContext;
+import io.swagger.v3.core.jackson.AbstractModelConverter;
+import io.swagger.v3.core.util.Json;
+import io.swagger.v3.oas.models.media.ObjectSchema;
+import io.swagger.v3.oas.models.media.Schema;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-
-import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
-import io.openapitools.jackson.dataformat.hal.annotation.Link;
-import io.swagger.converter.ModelConverter;
-import io.swagger.converter.ModelConverterContext;
-import io.swagger.models.Model;
-import io.swagger.models.properties.ObjectProperty;
-import io.swagger.models.properties.Property;
 
 /**
  * Converter to handle HAL annotated classes.
  *
  * It ensures embedded resources and links are arranged into an "_embedded" and "_links" object respectively.
  */
-public class HALModelConverter implements ModelConverter {
+public class HALModelConverter extends AbstractModelConverter {
 
-    @Override
-    public Model resolve(Type type, ModelConverterContext context, Iterator<ModelConverter> chain) {
-        Model model = null;
-
-        if (chain.hasNext()) {
-            model = chain.next().resolve(type, context, chain);
-        }
-
-        if (model != null && model.getProperties() != null) {
-            Map<HALReservedProperty, ObjectProperty> properties = new HashMap<>();
-            Set<String> originalProperties = new HashSet<>();
-
-            for (Map.Entry<String, Property> entry : model.getProperties().entrySet()) {
-                if (entry.getValue() instanceof HALProperty) {
-                    HALProperty property = (HALProperty) entry.getValue();
-                    if (!properties.containsKey(property.getHALType())) {
-                        properties.put(property.getHALType(), new ObjectProperty());
-                    }
-                    String name = property.getSpecificName().isEmpty() ? property.getName() : property.getSpecificName();
-                    properties.get(property.getHALType()).property(name, property.getProperty());
-                    originalProperties.add(entry.getKey());
-                }
-            }
-
-            for (Map.Entry<HALReservedProperty, ObjectProperty> entry : properties.entrySet()) {
-                model.getProperties().put(entry.getKey().getName(), entry.getValue());
-            }
-
-            for (String propertyName : originalProperties) {
-                model.getProperties().remove(propertyName);
-            }
-        }
-
-        return model;
+    public HALModelConverter() {
+        this(Json.mapper());
     }
 
+    public HALModelConverter(ObjectMapper mapper) {
+        super(mapper);
+    }
+
+    @SuppressWarnings("rawtypes")
     @Override
-    public Property resolveProperty(Type type, ModelConverterContext context, Annotation[] annotations, Iterator<ModelConverter> chain) {
-        Property property = null;
-        if (chain.hasNext()) {
-            property = chain.next().resolveProperty(type, context, annotations, chain);
+    public Schema resolve(AnnotatedType annotatedType, ModelConverterContext context, Iterator<ModelConverter> chain) {
+        if (!chain.hasNext()) {
+            return null;
         }
 
-        if (property != null && !(property instanceof HALProperty) && annotations != null) {
-            for (Annotation annotation : annotations) {
-                Optional<HALReservedProperty> rp = HALReservedProperty.valueOf(annotation.annotationType());
-                if (rp.isPresent()) {
-                    return new HALProperty(rp.get(), rp.get().getValue(annotation), property);
-                }
-            }
+        Schema<?> originalSchema = chain.next().resolve(annotatedType, context, chain);
+        Schema<?> schema = originalSchema;
+
+        if (originalSchema.get$ref() != null) {
+            schema = context.resolve(annotatedType);
         }
-        return property;
+
+        Map<String, Schema> properties = schema.getProperties();
+        if (properties == null) {
+            return originalSchema;
+        }
+
+        final JavaType javaType;
+        if (annotatedType.getType() instanceof JavaType) {
+            javaType = (JavaType) annotatedType.getType();
+        } else {
+            javaType = _mapper.constructType(annotatedType.getType());
+        }
+        BeanDescription description = _mapper.getSerializationConfig().introspect(javaType);
+        HALResourceType type = new HALResourceType(description);
+        if (!type.isHALResource()) {
+            return originalSchema;
+        }
+
+        Map<String, Schema> updatedProps = updateProperties(properties, type);
+        schema.setProperties(updatedProps);
+
+        if (originalSchema.get$ref() != null) {
+            context.defineModel(schema.getName(), schema);
+        }
+
+        return originalSchema;
     }
 
     /**
-     * Enumeration of properties reserved for HAL along with the association to the annotation marking objects to go into these properties.
+     * Create updated properties map.
      */
-    public enum HALReservedProperty {
-        LINKS("_links", Link.class), EMBEDDED("_embedded", EmbeddedResource.class);
+    @SuppressWarnings("rawtypes")
+    private Map<String, Schema> updateProperties(Map<String, Schema> properties, HALResourceType type) {
+        Map<String, Schema> updatedProps = new HashMap<>();
+        properties.forEach((propertyName, propertySchema) -> {
+            Optional<Link> annotation = type.getAnnotation(HALAnnotation.LINKS.getAnnotation(), propertyName);
+            if (annotation.isPresent()) {
+                Schema<?> halSchema = updatedProps.getOrDefault(HALAnnotation.LINKS.getName(), new ObjectSchema());
+                updatedProps.putIfAbsent(HALAnnotation.LINKS.getName(), halSchema);
 
-        private final String name;
-        private final Class<? extends Annotation> annotation;
-        private final Method valueMethod;
+                String name = HALAnnotation.LINKS.deriveName(type, annotation.get(), propertyName);
+                halSchema.addProperties(name, propertySchema);
 
-        HALReservedProperty(String name, Class<? extends Annotation> annotation) {
-            this.name = name;
-            this.annotation = annotation;
-            try {
-                valueMethod = annotation.getDeclaredMethod("value");
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException(e);
-            }
-        }
+            } else {
+                Optional<EmbeddedResource> embedded = type.getAnnotation(HALAnnotation.EMBEDDED.getAnnotation(), propertyName);
+                if (embedded.isPresent()) {
+                    Schema<?> halSchema = updatedProps.getOrDefault(HALAnnotation.EMBEDDED.getName(), new ObjectSchema());
+                    updatedProps.putIfAbsent(HALAnnotation.EMBEDDED.getName(), halSchema);
 
-        public String getName() {
-            return name;
-        }
+                    String name = HALAnnotation.EMBEDDED.deriveName(type, embedded.get(), propertyName);
+                    halSchema.addProperties(name, propertySchema);
 
-        public String getValue(Annotation annotation) {
-            try {
-                return (String) valueMethod.invoke(annotation);
-            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                throw new RuntimeException("Unable to get default value from annotation", e);
-            }
-        }
-
-        public static Optional<HALReservedProperty> valueOf(Class<? extends Annotation> annotation) {
-            for (HALReservedProperty rp : values()) {
-                if (rp.annotation.equals(annotation)) {
-                    return Optional.of(rp);
+                } else {
+                    updatedProps.put(propertyName, propertySchema);
                 }
             }
-            return Optional.empty();
-        }
+        });
+        return updatedProps;
     }
-
 }

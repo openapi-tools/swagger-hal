@@ -1,19 +1,22 @@
 package io.openapitools.hal.example.model;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import io.openapitools.jackson.dataformat.hal.HALLink;
+import io.openapitools.jackson.dataformat.hal.annotation.Curie;
+import io.openapitools.jackson.dataformat.hal.annotation.Curies;
 import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
 import io.openapitools.jackson.dataformat.hal.annotation.Link;
 import io.openapitools.jackson.dataformat.hal.annotation.Resource;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Represents a single as returned from REST service.
  */
 @Resource
+@Curies({@Curie(href = "http://docs.my.site/{rel}", prefix = "account")})
 public class AccountRepresentation {
+
     private String regNo;
     private String accountNo;
     private String name;
@@ -21,7 +24,7 @@ public class AccountRepresentation {
     @EmbeddedResource("transactions")
     private Collection<TransactionRepresentation> transactions;
 
-    @Link("account:transactions")
+    @Link(curie = "account", value = "transactions")
     private HALLink transactionsResource;
 
     @Link
@@ -39,7 +42,7 @@ public class AccountRepresentation {
         return name;
     }
 
-    @ApiModelProperty("Embeds the latest transaction of account.")
+    @Schema(description = "Embeds the latest transaction of account.")
     public Collection<TransactionRepresentation> getTransactions() {
         if (transactions == null) {
             return null;

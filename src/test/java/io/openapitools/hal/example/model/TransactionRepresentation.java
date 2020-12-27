@@ -9,6 +9,7 @@ import io.openapitools.jackson.dataformat.hal.annotation.Resource;
  */
 @Resource
 public class TransactionRepresentation {
+
     private String id;
     private String description;
     private String amount;
