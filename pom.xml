@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    
+
     <name>Swagger HAL module</name>
     <groupId>io.openapitools.hal</groupId>
     <version>1.0.5-SNAPSHOT</version>
     <artifactId>swagger-hal</artifactId>
     <packaging>jar</packaging>
 
-    <description>Swagger Open API specification module supporting generation of documentation from endpoints utilizing the Jackson HAL module.</description>
+    <description>Swagger Open API specification module supporting generation of documentation from
+        endpoints utilizing the Jackson HAL module.
+    </description>
     <url>https://github.com/openapi-tools/swagger-hal</url>
 
     <licenses>
         <license>
-          <name>MIT License</name>
-          <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
         </license>
     </licenses>
 
@@ -30,9 +34,10 @@
 
     <scm>
         <connection>scm:git:https://github.com/openapi-tools/swagger-hal.git</connection>
-        <developerConnection>scm:git:https://github.com/openapi-tools/swagger-hal.git</developerConnection>
+        <developerConnection>scm:git:https://github.com/openapi-tools/swagger-hal.git
+        </developerConnection>
         <url>https://github.com/openapi-tools/swagger-hal/tree/master</url>
-      <tag>HEAD</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
@@ -49,7 +54,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        
+
         <jakarta.ws.rs>2.1.6</jakarta.ws.rs>
         <io.swagger.version>2.1.4</io.swagger.version>
         <junit.version>5.7.0</junit.version>
@@ -61,10 +66,10 @@
     </properties>
 
     <dependencies>
-    	<dependency>
+        <dependency>
             <groupId>jakarta.ws.rs</groupId>
-			<artifactId>jakarta.ws.rs-api</artifactId>
-			<version>${jakarta.ws.rs}</version>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <version>${jakarta.ws.rs}</version>
         </dependency>
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
@@ -80,7 +85,7 @@
             <groupId>io.openapitools.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-hal</artifactId>
             <version>${jackson-dataformat-hal.version}</version>
-        </dependency>     
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -95,19 +100,19 @@
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-  			<artifactId>junit-jupiter</artifactId>
+            <artifactId>junit-jupiter</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-  			<artifactId>junit-jupiter-engine</artifactId>
+            <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.platform</groupId>
-  			<artifactId>junit-platform-launcher</artifactId>
+            <artifactId>junit-platform-launcher</artifactId>
             <version>${junit.platform.version}</version>
             <scope>test</scope>
         </dependency>
@@ -132,8 +137,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                	<source>8</source>
-                	<target>8</target>
+                    <source>8</source>
+                    <target>8</target>
                     <compilerArgs>
                         <arg>-Xlint</arg>
                     </compilerArgs>
@@ -189,7 +194,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                	<source>8</source>
+                    <source>8</source>
                 </configuration>
                 <executions>
                     <execution>
