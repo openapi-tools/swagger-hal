@@ -54,7 +54,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <jakarta.ws.rs>2.1.6</jakarta.ws.rs>
-        <io.swagger.version>2.1.4</io.swagger.version>
+        <io.swagger.version>2.1.8</io.swagger.version>
         <junit.version>5.7.0</junit.version>
         <junit.platform.version>1.7.0</junit.platform.version>
         <org.mockito.version>3.5.11</org.mockito.version>
