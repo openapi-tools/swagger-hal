@@ -40,6 +40,9 @@ public class HALModelConverter extends AbstractModelConverter {
         }
 
         Schema<?> originalSchema = chain.next().resolve(annotatedType, context, chain);
+        if (originalSchema == null) {
+            return null;
+        }
         Schema<?> schema = originalSchema;
 
         if (originalSchema.get$ref() != null) {
