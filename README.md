@@ -108,4 +108,3 @@ the Swagger HAL Module explicitly. The following illustrates the necessary confi
     </executions>
 </plugin>
 ```
-
