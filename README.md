@@ -62,7 +62,6 @@ Module is considered production ready.
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.openapitools.hal/swagger-hal/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.openapitools.hal/swagger-hal/)
 [![Javadoc](https://javadoc.io/badge/io.openapitools.hal/swagger-hal/badge.svg)](https://www.javadoc.io/doc/io.openapitools.hal/swagger-hal)
-[![Build Status](https://app.travis-ci.com/openapi-tools/gradle-swagger-plugin.svg?branch=master)](https://app.travis-ci.com/openapi-tools/gradle-swagger-plugin)
 
 
 # Usage
