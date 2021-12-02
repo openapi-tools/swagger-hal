@@ -34,7 +34,7 @@
         <connection>scm:git:https://github.com/openapi-tools/swagger-hal.git</connection>
         <developerConnection>scm:git:https://github.com/openapi-tools/swagger-hal.git
         </developerConnection>
-        <url>https://github.com/openapi-tools/swagger-hal/tree/master</url>
+        <url>https://github.com/openapi-tools/swagger-hal/tree/main</url>
         <tag>HEAD</tag>
     </scm>
 
